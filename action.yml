@@ -1,0 +1,21 @@
+name: 'Upload RPMs'
+description: 'Upload RPMs in a standardized way for oVirt. It must be '
+inputs:
+  directory:
+    description: 'Which directory to upload'
+    required: true
+    default: 'exported-artifacts'
+runs:
+  using: "composite"
+  steps:
+    - name: Install createrepo_c if needed
+      shell: bash
+      run: which createrepo_c || dnf install -y createrepo_c
+    - name: Create DNF repository
+      shell: bash
+      run: createrepo_c ${{ inputs.directory }}
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: ${{ inputs.directory }}
