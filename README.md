@@ -18,7 +18,7 @@ jobs:
     container: quay.io/ovirt/buildcontainer:stream8
     steps:
     - name: Upload artifacts
-      uses: .
+      uses: ovirt/upload-rpms-action@main
       with:
         directory: test-artifacts
 ```
