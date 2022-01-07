@@ -30,4 +30,4 @@ jobs:
           path: downloaded
       - name: Check if the test.rpm is there
         run:
-          test -f x86_64-0-0.x86_64.rpm
+          test -f downloaded/x86_64-0-0.x86_64.rpm
