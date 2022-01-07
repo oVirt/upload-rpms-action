@@ -6,7 +6,7 @@ This is intended for oVirt projects to use as a standard way to archive built RP
 
 ## Usage:
 
-```
+```yaml
 name: Self-test
 on:
   push:
