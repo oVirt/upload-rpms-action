@@ -14,7 +14,7 @@ jobs:
         run: |
           set -x
           mkdir -p test-artifacts
-          dnf install -y rpmbuild
+          dnf install -y rpm-build
           cd test-artifacts
           rpmbuild -bb ../test-source/test.spec --define "_rpmdir $(pwd)"
           mv x86_64/*.rpm .
