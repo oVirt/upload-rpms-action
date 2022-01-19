@@ -1,32 +1,25 @@
 name: Self-test
 on:
   push:
+    branches:
+      - master
   pull_request:
 jobs:
   selftest:
     name: Self-test
     runs-on: ubuntu-latest
-    container: quay.io/ovirt/buildcontainer:stream8
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Create sample RPM
-        run: |
-          set -x
-          mkdir -p test-artifacts
-          dnf install -y rpm-build
-          cd test-artifacts
-          rpmbuild -bb ../test-source/test.spec --define "_rpmdir $(pwd)"
-          mv x86_64/*.rpm .
-          rm -rf x86_64
-      - name: Upload artifacts
+      - name: Upload and build artifacts
         uses: ./
         with:
-          directory: test-artifacts
+          script: test-source/rpm.sh
+          distro: stream8
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: artifacts
+          name: artifacts-stream8
           path: downloaded
       - name: Check if the test.rpm is there
         run:

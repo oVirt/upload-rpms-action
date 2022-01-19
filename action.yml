@@ -1,21 +1,36 @@
-name: 'Upload RPMs'
-description: 'Upload RPMs in a standardized way for oVirt. It must be '
+name: 'Build and upload RPMs'
+description: 'Build and upload RPMs in a standardized way for oVirt.'
 inputs:
-  directory:
-    description: 'Which directory to upload'
+  script:
+    description: 'Script that builds rpm storing them in $ARTIFACTS_DIR.'
     required: true
-    default: 'exported-artifacts'
+    default: 'automation/rpm.sh'
+  distro:
+    description: 'The distro that rpm are built for.'
+    required: true
+    default: 'stream8'
 runs:
   using: "composite"
   steps:
-    - name: Install createrepo_c if needed
+    - name: Install dependencies
       shell: bash
-      run: which createrepo_c || dnf install -y createrepo_c
+      run: |
+        sudo apt update
+        sudo apt install podman
+    - name: Start container
+      shell: bash
+      run: |
+        podman run -d -it --name=builder --env-host \
+        -e ARTIFACTS_DIR=exported-artifacts -v $PWD:/workspace/:Z \
+        quay.io/ovirt/buildcontainer:${{ inputs.distro }}
+    - name: Run build script
+      shell: bash
+      run: podman exec -it -w /workspace builder ./${{ inputs.script }}
     - name: Create DNF repository
       shell: bash
-      run: createrepo_c ${{ inputs.directory }}
+      run: podman exec -it -w /workspace builder createrepo_c exported-artifacts
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: artifacts
-        path: ${{ inputs.directory }}
+        name: artifacts-${{ inputs.distro }}
+        path: exported-artifacts
