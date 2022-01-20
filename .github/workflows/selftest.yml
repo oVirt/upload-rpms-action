@@ -23,10 +23,11 @@ jobs:
         uses: ./
         with:
           directory: test-artifacts
+          distro: el8stream
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: artifacts
+          name: artifacts-el8stream
           path: downloaded
       - name: Check if the test.rpm is there
         run:
