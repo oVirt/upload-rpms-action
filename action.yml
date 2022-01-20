@@ -5,6 +5,10 @@ inputs:
     description: 'Which directory to upload'
     required: true
     default: 'exported-artifacts'
+  distro:
+    description: 'The distribution of artifacts'
+    required: true
+    default: 'el8stream'
 runs:
   using: "composite"
   steps:
@@ -17,5 +21,5 @@ runs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: artifacts
+        name: artifacts-${{ inputs.distro }}
         path: ${{ inputs.directory }}
