@@ -5,21 +5,21 @@ inputs:
     description: 'Which directory to upload'
     required: true
     default: 'exported-artifacts'
-  distro:
-    description: 'The distribution of artifacts'
-    required: true
-    default: 'el8stream'
 runs:
   using: "composite"
   steps:
     - name: Install createrepo_c if needed
       shell: bash
       run: which createrepo_c || dnf install -y createrepo_c
-    - name: Create DNF repository
+    - name: Create DNF repository if needed
       shell: bash
-      run: createrepo_c ${{ inputs.directory }}
+      run: test -d ${{ inputs.directory }}/repodata || createrepo_c ${{ inputs.directory }}
+    - name: Get distro suffix
+      id: eval
+      shell: bash
+      run: echo "::set-output name=distro::$(rpm --eval %{?dist} | cut -d '.' -f 2)"
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: artifacts-${{ inputs.distro }}
+        name: rpm-${{ steps.eval.outputs.distro }}
         path: ${{ inputs.directory }}

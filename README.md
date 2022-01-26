@@ -15,11 +15,10 @@ jobs:
   selftest:
     name: Self-test
     runs-on: ubuntu-latest
-    container: quay.io/ovirt/buildcontainer:stream8
+    container: quay.io/ovirt/buildcontainer:el8stream
     steps:
     - name: Upload artifacts
-      uses: ovirt/upload-rpms-action@v1
+      uses: ovirt/upload-rpms-action@v2
       with:
         directory: test-artifacts
-        distro: el8stream
 ```
