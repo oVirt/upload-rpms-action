@@ -19,7 +19,7 @@ runs:
       shell: bash
       run: echo "distro=$(rpm --eval %{?dist} | cut -d '.' -f 2)" >> $GITHUB_OUTPUT
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rpm-${{ steps.eval.outputs.distro }}
         path: ${{ inputs.directory }}
