@@ -15,7 +15,7 @@ jobs:
   selftest:
     name: Self-test
     runs-on: ubuntu-latest
-    container: quay.io/ovirt/buildcontainer:el8stream
+    container: quay.io/ovirt/buildcontainer:el9stream
     steps:
     - name: Upload artifacts
       uses: ovirt/upload-rpms-action@main

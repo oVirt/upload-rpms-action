@@ -10,13 +10,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - tag: el8stream
-            rpm-suffix: el8
           - tag: el9stream
             rpm-suffix: el9
+          - tag: el10stream
+            rpm-suffix: el10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Create sample RPM
         run: |
           set -x
@@ -31,7 +31,7 @@ jobs:
         with:
           directory: test-artifacts
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: rpm-${{ matrix.rpm-suffix }}
           path: downloaded
